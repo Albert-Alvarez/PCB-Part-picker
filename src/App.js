@@ -1,15 +1,24 @@
+/*global chrome*/
+
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
+  muestraLaURL() {
+    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+      chrome.tabs.create({ url: "https://www.google.es/" });
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Edit <code>src/App.js</code> and save to reload.
+            <button onClick={this.muestraLaURL}>Click me</button>
           </p>
           <a
             className="App-link"

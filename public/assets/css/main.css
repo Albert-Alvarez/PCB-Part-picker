@@ -1,0 +1,14 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    /* font-family: 'Montserrat', sans-serif; */
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #2C2C2C;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+}

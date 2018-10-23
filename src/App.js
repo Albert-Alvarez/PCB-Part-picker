@@ -1,34 +1,37 @@
 /*global chrome*/
 
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
 
-  muestraLaURL() {
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-      chrome.tabs.create({ url: "https://www.google.es/" });
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedPCB: "Caca"
+    };
+  }
+
+  closeIframe() {
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+        var activeTab = tabs[0];
+        chrome.tabs.sendMessage(activeTab.id, { "type": "closeModal" });
     });
   }
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            <button onClick={this.muestraLaURL}>Click me</button>
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+        <header>
+          <img id="logo" src="assets/img/logo.svg"/> 
+          <h1>PCB Part picker</h1>
+          <a href="#" id="closeBtn" onClick={this.closeIframe}><img id="close" src="assets/img/right-arrow.svg"/></a>
         </header>
+        {/* <PCBselector></PCBselector>
+        <PartList></PartList>
+        <PickPart></PickPart>
+        <ExportBOM></ExportBOM> */}
+        <a class="about" target="_blank" href="https://albertalvarezcarulla.com/PCB-Part-picker">About</a>
       </div>
     );
   }

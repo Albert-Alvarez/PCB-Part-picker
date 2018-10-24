@@ -6,7 +6,8 @@
 
   "browser_action": { },
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "background": {
     "scripts": ["background.js"],

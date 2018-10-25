@@ -15,7 +15,7 @@ class App extends Component {
     this.handleMessage = this.handleMessage.bind(this);
     this.getAvailablePCBs = this.getAvailablePCBs.bind(this);
 
-    chrome.storage.sync.get(['available_pcbs'], this.getAvailablePCBs);
+    chrome.storage.local.get({ available_pcbs: [] }, this.getAvailablePCBs);
 
   }
 

@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 120,
+        minWidth: 200,
     },
     selectEmpty: {
         marginTop: theme.spacing.unit * 2,
@@ -42,9 +42,16 @@ class PCBSelector extends Component {
     }
 
     handleChange(event) {
-        this.setState({ value: event.target.value });
-        chrome.runtime.sendMessage({ type: 'availablePCBs', data: ['ea', 'oa', 'iu'] },
-            function (response) { });
+        if(event.target.value == 'addNewPCB') {
+            let newPcb = prompt("Please, enter the name of your new PCB:", "Prototype's name...");
+
+            if (newPcb != null) {
+                chrome.runtime.sendMessage({ type: 'addNewPCB', data: newPcb });
+            }
+        } else {
+            this.setState({ value: event.target.value });
+            // chrome.runtime.sendMessage({ type: 'availablePCBs', data: ['ea', 'oa', 'iu'] });
+        }
     }
 
     render() {

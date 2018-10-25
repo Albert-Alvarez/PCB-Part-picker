@@ -5,12 +5,20 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    chrome.storage.local.set({available_pcbs: request.data}, function() {
-        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-            for (let i=0; i<tabs.length; ++i) {
-                chrome.tabs.sendMessage(tabs[i].id, { target: 'app', type: 'availablePCBs', data: request.data });
-            }
-        });
-    });
+    switch (request.type) {
+        case 'addNewPCB':
+            chrome.storage.local.get({ available_pcbs: [] }, function(response) {
+                let availablePCBs = response.available_pcbs;
+                availablePCBs.push(request.data);
+                chrome.storage.local.set({ available_pcbs: availablePCBs }, function () {
+                    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+                        for (let i = 0; i < tabs.length; ++i) {
+                            chrome.tabs.sendMessage(tabs[i].id, { target: 'app', type: 'availablePCBs', data: availablePCBs });
+                        }
+                    });
+                });
+            });
+            break;
+    }
 });
 

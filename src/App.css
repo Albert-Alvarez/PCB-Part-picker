@@ -2,6 +2,10 @@
 
 }
 
+.App>div {
+  padding:10px;
+}
+
 .App>header {
   background-color: #2C2C2C;
   height: 65px;

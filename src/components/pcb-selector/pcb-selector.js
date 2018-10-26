@@ -16,7 +16,7 @@ const styles = theme => ({
     },
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 200,
+        minWidth: 120,
     },
     selectEmpty: {
         marginTop: theme.spacing.unit * 2,
@@ -26,47 +26,34 @@ const styles = theme => ({
 class PCBSelector extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            value: ''
-        };
-        this.handleChange = this.handleChange.bind(this);
+        this.onPcbSelected = this.onPcbSelected.bind(this);
     }
 
     createSelector = () => {
         let selector = [];
 
-        selector = this.props.AvailablePCBs.map(pcb => {
-            return <MenuItem value={pcb}>{pcb}</MenuItem>;
+        selector = this.props.pcbs.map((pcb, index) => {
+            return <MenuItem value={index}>{pcb}</MenuItem>;
         });
         return selector;
     }
 
-    handleChange(event) {
-        if(event.target.value == 'addNewPCB') {
-            let newPcb = prompt("Please, enter the name of your new PCB:", "Prototype's name...");
-
-            if (newPcb != null) {
-                chrome.runtime.sendMessage({ type: 'addNewPCB', data: newPcb });
-            }
-        } else {
-            this.setState({ value: event.target.value });
-            // chrome.runtime.sendMessage({ type: 'availablePCBs', data: ['ea', 'oa', 'iu'] });
-        }
+    onPcbSelected(event) {
+        this.props.onChange(event);
     }
 
     render() {
-        let selected = (this.props.selectedPCB) ? false : true;
         const { classes } = this.props;
         return (
 
             <form className={classes.root} autoComplete="off">
                 <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="pc -selector">PCB name</InputLabel>
+                    <InputLabel shrink htmlFor="pcb-selector">PCB name</InputLabel>
                     <Select
-                        value={this.state.value}
-                        onChange={this.handleChange}
+                        value={this.props.selectedPcb}
+                        onChange={event => this.onPcbSelected(event)}
                         inputProps={{
-                            name: 'PCB Selector',
+                            name: 'pcb-selector',
                             id: 'pcb-selector',
                         }}
                     >

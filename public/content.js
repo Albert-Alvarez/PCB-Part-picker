@@ -22,7 +22,3 @@ chrome.runtime.onMessage.addListener(request => {
         }
     }
 });
-
-chrome.storage.onChanged.addListener(function (changes, namespace) {
-    alert("Hello! chrome.storage.onChanged.Listener here!");
-});

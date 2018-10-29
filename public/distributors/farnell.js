@@ -1,3 +1,5 @@
+validDistributor = true;
+
 function validProductPage() {
     var page = document.getElementById('page');
 
@@ -17,19 +19,8 @@ function getProduct() {
     let child = productPage.querySelectorAll('*');
     let prop;
     let priceList = [];
-    let product = {
-        "distributor": 'Farnell',
-        "sku": '',
-        "manufacturerId": '',
-        "description": '',
-        "url": '',
-        "stockAvailable": null, 
-        "minimum": null,
-        "multiple": null,
-        "curreny": null,
-        "price": []
-    };
-
+    
+    product.distributor = 'Farnell'
     product.url = location.href;
 
     for(let i = 0; i < child.length; i++) {

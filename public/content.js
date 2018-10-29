@@ -1,4 +1,19 @@
-chrome.runtime.onMessage.addListener(request => {
+var product = {
+    "distributor": null,
+    "sku": null,
+    "manufacturerId": null,
+    "description": null,
+    "url": null,
+    "stockAvailable": null, 
+    "minimum": null,
+    "multiple": null,
+    "curreny": null,
+    "price": []
+};
+
+var validDistributor = false;
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.target === 'extension') {
         switch (request.type) {
             case 'openModal':
@@ -15,9 +30,15 @@ chrome.runtime.onMessage.addListener(request => {
                     document.body.appendChild(iframe);
                 }
                 break;
-
             case 'closeModal':
                 document.body.removeChild(document.getElementById('pcb-part-picker'));
+                break;
+            case 'availableProduct':
+                if (validDistributor) {
+                    sendResponse({"productAvailable": validProductPage()});
+                } else {
+                    sendResponse({"productAvailable": false });
+                }
                 break;
         }
     }

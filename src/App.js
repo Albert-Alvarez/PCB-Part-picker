@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import './App.css';
 import PCBSelector from './components/pcb-selector/pcb-selector';
 import RemovePCB from './components/remove-pcb/remove-pcb';
+import AddPart from './components/add-part/add-part';
 
 class App extends Component {
 
@@ -11,16 +12,24 @@ class App extends Component {
     super(props)
     this.state = {
       selectedPcb: '',
-      pcbs: []
+      pcbs: [],
+      productAvailable: false
     };
-    this.handleMessage = this.handleMessage.bind(this);
     this.getLastUpdates = this.getLastUpdates.bind(this);
     this.getPcbs = this.getPcbs.bind(this);
+    this.getIfProductAvailable = this.getIfProductAvailable.bind(this);
     this.onPcbSelected = this.onPcbSelected.bind(this);
     this.removePcb = this.removePcb.bind(this);
+    this.addPart = this.addPart.bind(this);
 
     chrome.storage.local.get({ pcbs: [] }, this.getPcbs);
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, { target: 'extension', type: 'availableProduct' }, this.getIfProductAvailable);
+    });
+  }
 
+  getIfProductAvailable(response){
+    this.setState({ productAvailable: response.productAvailable });
   }
 
   getPcbs(result) {
@@ -31,22 +40,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    chrome.runtime.onMessage.addListener(this.handleMessage);
     chrome.storage.onChanged.addListener(this.getLastUpdates);
-  }
-
-  componentWillUnmount() {
-    chrome.runtime.onMessage.removeListener(this.handleMessage);
-  }
-
-  handleMessage(msg) {
-    // if (msg.target === 'app') {
-    //   switch (msg.type) {
-    //     case 'newAvailablePcb':
-    //       chrome.storage.local.get({ pcbs: [] }, this.getPcbs);
-    //       break;
-    //   }
-    // }
   }
 
   removePcb () {
@@ -55,6 +49,10 @@ class App extends Component {
     if(confirmation) {
       chrome.runtime.sendMessage({ type: 'removePCB', oldPcb: this.state.selectedPcb });
     }
+  }
+
+  addPart () {
+    alert("hola");
   }
 
   getLastUpdates(changes, namespace) {
@@ -90,7 +88,7 @@ class App extends Component {
   }
 
   render() {
-    let disableRemovePCB = (this.state.selectedPcb === '');
+    const disableRemovePCB = (this.state.selectedPcb === '');
     return (
       <div className="App">
         <header>
@@ -105,6 +103,11 @@ class App extends Component {
             onChange={this.onPcbSelected}
           >
           </PCBSelector>
+          <AddPart
+            disabled={!this.state.productAvailable}
+            onClickHandler={this.addPart}
+          >
+          </AddPart>
           <RemovePCB
             disabled={disableRemovePCB}
             onClickHandler={this.removePcb}
